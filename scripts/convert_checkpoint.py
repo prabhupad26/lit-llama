@@ -66,8 +66,8 @@ shard_dims = {
 def meta_weights_for_nano_model(
     *,
     output_dir: Path = Path("checkpoints/lit-llama"),
-    checkpoint_dir: Path = Path("checkpoints/llama/"),
-    model_size: str = "7B",
+    checkpoint_dir: Path = Path("/cluster/home/repo/my_llm_experiments/lit-llama/checkpoints/lit-llama"),
+    model_size: str = "30B",
     dtype: str = "float32",
 ) -> None:
     output_dir = output_dir / model_size

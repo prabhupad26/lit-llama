@@ -1,0 +1,8 @@
+# Basic configs
+tokenizer_path: /cluster/home/repo/my_llm_experiments/lit-llama/checkpoints/lit-llama/tokenizer.model
+db_file_path: /cluster/home/repo/my_llm_experiments/esrs_data_collection/srn_data_collector/main.db
+
+# Build ESRS Alpaca fmt json file
+recommendation_response_path: /cluster/home/srn_storage/sample_retriever_recommendations
+output_raw_json_path: /cluster/home/repo/my_llm_experiments/lit-llama/esrs_finetune/esrs_alpaca_raw.json
+dataset_save_path: /cluster/home/repo/my_llm_experiments/lit-llama/esrs_finetune

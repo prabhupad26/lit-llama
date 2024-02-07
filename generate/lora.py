@@ -6,6 +6,7 @@ from typing import Optional
 
 import lightning as L
 import torch
+import re
 
 # support running without installing as a package
 wd = Path(__file__).parent.parent.resolve()
@@ -15,7 +16,8 @@ from generate import generate
 from lit_llama import Tokenizer, LLaMA
 from lit_llama.lora import lora
 from lit_llama.utils import lazy_load, llama_model_lookup
-from scripts.prepare_alpaca import generate_prompt
+# from scripts.prepare_alpaca import generate_prompt
+# from esrs_finetune.main import generate_prompt
 
 lora_r = 8
 lora_alpha = 16
@@ -28,6 +30,7 @@ def main(
     lora_path: Path = Path("out/lora/alpaca/lit-llama-lora-finetuned.pth"),
     pretrained_path: Path = Path("checkpoints/lit-llama/7B/lit-llama.pth"),
     tokenizer_path: Path = Path("checkpoints/lit-llama/tokenizer.model"),
+    prompt_path: Path = Path('/cluster/home/repo/my_llm_experiments/lit-llama/esrs_finetune/sample_prompt.txt'),
     quantize: Optional[str] = None,
     max_new_tokens: int = 100,
     top_k: int = 200,
@@ -52,6 +55,14 @@ def main(
         temperature: A value controlling the randomness of the sampling process. Higher values result in more random
             samples.
     """
+    with open(prompt_path, 'r') as f:
+        prompt = f.read()
+
+    prompt = re.sub(r"-\s+", "", prompt)
+    prompt = re.sub(r"\s+", " ", prompt)
+    prompt = re.sub(r"\s$|^\s", "", prompt)
+
+
     assert lora_path.is_file()
     assert pretrained_path.is_file()
     assert tokenizer_path.is_file()
@@ -82,8 +93,8 @@ def main(
     model = fabric.setup(model)
 
     tokenizer = Tokenizer(tokenizer_path)
-    sample = {"instruction": prompt, "input": input}
-    prompt = generate_prompt(sample)
+    # sample = {"instruction": prompt, "input": input}
+    # prompt = generate_prompt(sample)
     encoded = tokenizer.encode(prompt, bos=True, eos=False, device=model.device)
 
     t0 = time.perf_counter()
@@ -98,7 +109,7 @@ def main(
     t = time.perf_counter() - t0
 
     output = tokenizer.decode(output)
-    output = output.split("### Response:")[1].strip()
+    # output = output.split("### Response:")[1].strip()
     print(output)
 
     print(f"\n\nTime for inference: {t:.02f} sec total, {max_new_tokens / t:.02f} tokens/sec", file=sys.stderr)

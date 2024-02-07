@@ -14,3 +14,7 @@ wandb
 # downloaded by our tests
 original_model.py
 original_adapter.py
+
+esrs_finetune/esrs_alpaca_raw.json
+esrs_finetune/out/
+*.pt
